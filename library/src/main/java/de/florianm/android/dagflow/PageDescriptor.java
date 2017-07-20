@@ -1,40 +1,31 @@
 package de.florianm.android.dagflow;
 
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 public abstract class PageDescriptor {
-    private final String className;
+    private final String name;
     private final String tag;
-    private final String title;
+    private final Bundle args;
 
-    public PageDescriptor(@NonNull String className, @NonNull String tag, @Nullable String title) {
-        this.className = className;
+    public PageDescriptor(@NonNull String name, @NonNull String tag, @Nullable Bundle args) {
+        this.name = name;
         this.tag = tag;
-        this.title = title;
+        this.args = args;
     }
 
-    public String getClassName() {
-        return className;
+    public String getName() {
+        return name;
     }
 
     public String getTag() {
         return tag;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Fragment newFragment()  {
-        try {
-            Class<?> clazz = Class.forName(className);
-            return (Fragment) clazz.newInstance();
-        } catch (Throwable e) {
-            throw new RuntimeException("Failed to create an instance of " + className);
-        }
+    public Bundle getArgs() {
+        return args;
     }
 
     @Override
@@ -44,26 +35,25 @@ public abstract class PageDescriptor {
 
         PageDescriptor that = (PageDescriptor) o;
 
-        if (!className.equals(that.className)) return false;
+        if (!name.equals(that.name)) return false;
         if (!tag.equals(that.tag)) return false;
-        return title != null ? title.equals(that.title) : that.title == null;
-
+        return args != null ? args.equals(that.args) : that.args == null;
     }
 
     @Override
     public int hashCode() {
-        int result = className.hashCode();
+        int result = name.hashCode();
         result = 31 * result + tag.hashCode();
-        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (args != null ? args.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "PageDescriptor{" +
-                "className='" + className + '\'' +
+                "name='" + name + '\'' +
                 ", tag='" + tag + '\'' +
-                ", title='" + title + '\'' +
+                ", args=" + args +
                 '}';
     }
 }
